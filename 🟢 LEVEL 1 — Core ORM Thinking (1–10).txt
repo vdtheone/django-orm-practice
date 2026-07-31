@@ -1,0 +1,67 @@
+🟢 LEVEL 1 — Core ORM Thinking (1–10)
+
+1️⃣ Get all books that are in stock and priced above 500.
+❌ Incorrect--> Book.objects.filter(stock__isnull=False, price__gt=500)
+✅ Correct Answer--> Book.objects.filter(stock__gt=0, price__gt=500)
+
+2️⃣ Get books published in the last 30 days.
+❌ Incorrect--> Book.objects.filter(published__gt=date(2025-11-25))
+✅ Correct Answer--> 
+    from django.utils import timezone
+    from datetime import timedelta
+
+    today = timezone.now().date()
+    threshold = today - timedelta(30)
+
+    Book.objects.filter(published__date__gte=threshold)
+    Book.objects.filter(published__gte=threshold)
+
+3️⃣ Get books whose title contains "django" or "python".
+-> Book.objects.filter(Q(title__icontains="django") | Q(title__icontains="python"))
+--> filter(title__iregex=r"(django|python)")
+
+4️⃣ Check if any book exists with stock = 0.
+-> Book.objects.filter(stock=0).exists()
+
+5️⃣ Get the first book ordered by highest rating.
+❌ Incorrect--> highest_rating = Review.objects.filter(
+        book = OuterRef('pk'),
+    ).order_by('-rating')
+    Book.objects.filter(Subquery(highest_rating.values('rating')[:1]))
+✅ Correct Answer-->
+    Book.objects.annotate(max_rating=Max("review__rating")).order_by("-max_rating").first()
+Alternative (if Book has rating field directly):
+    Book.objects.order_by("-rating").first()
+
+6️⃣ Get users who have placed at least one order.
+❌ Incorrect--> atleast_one_order = Order.objects.filter(user__isnull=False).values_list("id")
+                    User.objects.filter(id__in=atleast_one_order)
+✅ Correct Answer-->
+    User.objects.filter(order__isnull=False).distinct()
+Or using orders:
+    User.objects.filter(id__in=Order.objects.values_list("user_id", flat=True).distinct())
+
+7️⃣ Get orders created today.
+❌ Incorrect--> Order.objects.filter(created_at=date(2025-12-24))
+✅ Correct Answer-->
+    from django.utils import timezone
+    today = timezone().now().date()
+
+    Order.objects.filter(created_at__date=today)
+
+8️⃣ Get books that have no reviews.
+# If related_name='reviews'
+-> Book.objects.filter(reviews__isnull=True)
+# Generic safest:
+-> Book.objects.filter(review__isnull=True).distinct()
+# annotate
+-> Book.objects.annotate(review_count = Count("reviews")).filter(review_count=0)
+
+9️⃣ Get distinct authors who have written books priced above 1000.
+❌ Incorrect--> Author.objects.annotate(books__price__gt=1000)
+✅ Correct Answer-->
+    Author.objects.filter(books__price__gt=1000).distinct()
+    Author.objects.annotate(max_price = Max("books__price")).filter(max_price__gt=1000)
+
+🔟 Get total number of orders.
+-> Order.objects.count()

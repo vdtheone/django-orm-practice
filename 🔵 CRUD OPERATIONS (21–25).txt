@@ -1,0 +1,24 @@
+🔵 CRUD OPERATIONS (21–25)
+
+21. Create a new book.
+--> Book.objects.create(title="Django ORM", price=600, published="2022-01-01", author_id=1)
+
+22. Update price of book with id=5 to 900.
+--> book = Book.objects.get(id=5)
+    book.price = 900
+    book.save()
+--> Book.objects.filter(id=5).update(price=900)
+
+23. Increase price of all books by 10%.
+❌--> Book.objects.update(price=price*100/100+10)
+✅--> correct answere ---->>    
+        from django.db.models import F
+        Book.objects.update(price=F("price") * 1.10)
+
+
+24. Delete all books cheaper than 200.
+--> Book.objects.filter(price__lt=200).delete()
+
+25. Get or create a book with title “Django Mastery”.
+❌--> Book.get_or_create(title="Django Mastery")
+✅--> correct answere ---->> Book.objects.get_or_create(title="Django Mastery")

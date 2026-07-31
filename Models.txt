@@ -1,0 +1,8 @@
+📌 Assume Models (Mental Model)
+User
+Author
+Book (author, price, published, stock, rating)
+Order (user, status, total_amount, created_at)
+OrderItem (order, book, quantity, price)
+Review (user, book, rating, created_at)
+    

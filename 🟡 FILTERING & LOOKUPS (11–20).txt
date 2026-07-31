@@ -1,0 +1,40 @@
+🟡 FILTERING & LOOKUPS (11–20)
+
+11. Get books with price NOT equal to 500.
+--> Book.objects.exclude(price=500)
+
+12. Get books where price is NULL.
+--> Book.objects.filter(price=NULL)
+--> correct answere ---> Book.objects.filter(price__isnull=True)
+
+13. Get books with IDs in [1, 5, 10].
+--> Book.objects.filter(id__in([1, 5, 10]))
+--> Syntax error ---> Book.objects.filter(id__in=[1, 5, 10]) 
+    __in is a lookup, not a function
+
+14. Get books ordered by price (ascending).
+--> Book.objects.all().order_by("price")
+
+15. Get books ordered by published date (latest first).
+--> Book.objects.all().order_by("-published")
+
+16. Get first 5 books.
+--> Book.objects.all()[:5]
+
+17. Get last 3 books ordered by price.
+❌--> Book.objects.all().order_by("price")[:3]
+✅--> correct answere --->> Book.objects.order_by("-price")[:3]
+✅--> correct answere --->> Book.objects.order_by("price").reverse()[:3]
+
+18. Get books whose title starts with “Python”.
+--> Book.objects.filter(title__startswith="Python")
+
+19. Get books whose title ends with “Guide”.
+--> Book.objects.filter(title__endswith="Guide")
+
+20. Check if any book exists with price > 1000.
+❌--> Book.objects.filter(price__gt=1000)
+✅--> Book.objects.filter(price__gt=1000).exists()
+    filter() returns QuerySet
+    .exists() returns True / False
+    Very efficient (uses LIMIT 1)

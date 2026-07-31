@@ -1,0 +1,412 @@
+🧩 DJANGO ORM — COMPLETE TOPIC LIST
+1️⃣ QuerySet Basics (Foundation)
+
+You must master these first.
+
+Model.objects.all()
+
+filter()
+
+exclude()
+
+get()
+
+first(), last()
+
+exists()
+
+count()
+
+values()
+
+values_list()
+
+distinct()
+
+order_by()
+
+slicing ([:10], [10:20])
+
+chaining QuerySets
+
+lazy evaluation of QuerySets
+
+2️⃣ Field Lookups
+
+Used inside filter() / exclude().
+
+Exact lookups
+exact, iexact
+
+Comparison
+gt, gte, lt, lte
+
+String lookups
+contains, icontains,
+startswith, endswith, istartswith
+
+Date & time
+year, month, day, date, week, hour
+
+Null & boolean
+isnull
+
+Range & membership
+in, range
+
+Regex
+regex, iregex
+
+3️⃣ Relationship Traversal (Joins)
+
+Core ORM power.
+
+ForeignKey traversal
+order__user__email
+
+Reverse relations
+user.order_set.all()
+
+related_name
+
+OneToOne relationships
+
+ManyToMany relationships
+
+Filtering across relationships
+
+Multi-level joins
+
+4️⃣ Aggregation
+
+Used to summarize data.
+
+aggregate()
+
+Count
+
+Sum
+
+Avg
+
+Min
+
+Max
+
+Aggregation with filter
+
+Aggregation with related fields
+
+Aggregation vs annotation
+
+5️⃣ Annotation
+
+Per-row computed values.
+
+annotate()
+
+Annotating counts
+
+Annotating sums
+
+Annotating with filters
+
+Annotating across relations
+
+Multiple annotations
+
+Using annotations in filters
+
+6️⃣ Expressions (Very Important)
+
+How ORM builds SQL safely.
+
+F() expressions
+
+Arithmetic with F()
+
+Comparing fields using F
+
+Updating using F
+
+ExpressionWrapper
+
+Value()
+
+OutputField
+
+7️⃣ Conditional Expressions
+
+For dynamic logic in queries.
+
+Case
+
+When
+
+default
+
+Conditional annotations
+
+Boolean flags (is_active, is_popular)
+
+Conditional aggregation
+
+8️⃣ Q Objects (Complex Conditions)
+
+For OR / NOT logic.
+
+Q()
+
+| (OR)
+
+& (AND)
+
+~Q() (NOT)
+
+Dynamic filters
+
+Combining Q with normal filters
+
+9️⃣ Subqueries & Correlated Queries (ADVANCED)
+
+This separates beginners from pros.
+
+Subquery
+
+OuterRef
+
+Scalar subqueries
+
+Subquery inside annotate
+
+Subquery inside filter
+
+Latest related objects per row
+
+Subqueries vs joins
+
+🔟 Exists Queries
+
+Performance-oriented querying.
+
+Exists
+
+Checking related existence
+
+Avoiding joins with Exists
+
+Exists inside annotate
+
+Exists inside filter
+
+1️⃣1️⃣ Date & Time Functions
+
+Used for analytics & reports.
+
+Trunc
+
+TruncDate
+
+TruncMonth
+
+TruncYear
+
+ExtractYear
+
+ExtractMonth
+
+Timezone aware queries
+
+Date range grouping
+
+1️⃣2️⃣ Database Functions
+
+DB-level computations.
+
+Coalesce
+
+Concat
+
+Length
+
+Lower, Upper
+
+Cast
+
+Greatest, Least
+
+Custom database functions
+
+1️⃣3️⃣ Raw Expressions & SQL
+
+When ORM needs help.
+
+RawSQL
+
+.extra() (legacy)
+
+Mixing ORM + SQL safely
+
+When to avoid raw SQL
+
+1️⃣4️⃣ Bulk Operations
+
+High-performance writes.
+
+bulk_create
+
+bulk_update
+
+update()
+
+delete()
+
+Batch size control
+
+Signals limitation in bulk ops
+
+1️⃣5️⃣ Transactions & Atomicity
+
+Critical for real systems.
+
+transaction.atomic
+
+Nested transactions
+
+Rollbacks
+
+Savepoints
+
+Handling failures safely
+
+1️⃣6️⃣ Locking & Concurrency
+
+Prevents data corruption.
+
+select_for_update
+
+Row-level locking
+
+Preventing overselling
+
+Race condition prevention
+
+Isolation levels (conceptual)
+
+1️⃣7️⃣ Query Optimization
+
+Extremely important in interviews.
+
+select_related
+
+prefetch_related
+
+Prefetch
+
+Avoiding N+1 queries
+
+Choosing correct join strategy
+
+Reducing query count
+
+1️⃣8️⃣ Indexing & Performance
+
+Database-level optimization.
+
+db_index=True
+
+Meta.indexes
+
+Composite indexes
+
+Partial indexes
+
+When indexes hurt performance
+
+1️⃣9️⃣ Query Debugging & Inspection
+
+Must-know skill.
+
+.query
+
+Django Debug Toolbar
+
+connection.queries
+
+Logging SQL queries
+
+EXPLAIN plans (conceptual)
+
+2️⃣0️⃣ Managers & Custom QuerySets
+
+Reusable ORM logic.
+
+Custom Manager
+
+Custom QuerySet
+
+Chainable custom methods
+
+Soft delete patterns
+
+Multi-manager patterns
+
+2️⃣1️⃣ Model Constraints
+
+Data integrity via ORM.
+
+unique=True
+
+UniqueConstraint
+
+CheckConstraint
+
+Database-level validation
+
+2️⃣2️⃣ Signals & ORM
+
+Side-effects & hooks.
+
+pre_save, post_save
+
+pre_delete, post_delete
+
+When NOT to use signals
+
+Signals vs services
+
+2️⃣3️⃣ Pagination & Limits
+
+Used in APIs.
+
+limit, offset
+
+Slicing with QuerySets
+
+Efficient pagination patterns
+
+2️⃣4️⃣ DRF + ORM Patterns
+
+Real-world usage.
+
+Optimizing serializers
+
+SerializerMethodField vs annotate
+
+ViewSet query optimization
+
+Avoiding ORM misuse in serializers
+
+2️⃣5️⃣ ORM Anti-Patterns (VERY IMPORTANT)
+
+What NOT to do.
+
+Query inside loops
+
+Overusing select_related
+
+Fetching unused fields
+
+Large IN queries
+
+Python filtering instead of ORM

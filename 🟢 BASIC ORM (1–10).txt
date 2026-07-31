@@ -1,0 +1,48 @@
+🟢 BASIC ORM (1–10)
+
+1. Get all books.
+--> Book.objects.all()
+
+2. Get all authors.
+--> Author.objects.all()
+
+3. Get a book with id = 10.
+--> Book.objects.get(id=10)
+
+    Note (Interview Tip):
+        Raises DoesNotExist if no record
+        Raises MultipleObjectsReturned if more than one
+
+4. Get all books priced above 500.
+--> Book.objects.filter(price__gt=500)
+
+5. Get all books priced between 300 and 800.
+--> Book.objects.filter(price__lt=800, price__gt=300)
+
+    Recommended--> Book.objects.filter(price__range(300,800))
+    range is more readable and commonly preferred.
+
+6. Get all books whose title contains “django” (case-insensitive).
+--> Book.objects.filter(title__icontains="django")
+
+7. Get all books published after 1st Jan 2022.
+--> Book.objects.filter(published__gt="2022-01-01")
+
+8. Get all books written by author with id = 3.
+--> Book.objects.filter(author_id=3)
+--> Book.objects.filter(author__id=3)
+    
+    Interview Tip:
+        author_id avoids an extra join → slightly faster.
+
+9. Get only title and price of all books.
+--> Book.objects.values("title","price")
+
+    .all() is optional here
+    Returns: List of dictionaries {'title': 'Django ORM', 'price': 500}
+
+10. Get distinct author IDs from books.
+--> Book.objects.values('author_id').distinct()
+
+    Without distinct() --->>> 1, 1, 2, 2, 3
+    With distinct(): --->>> 1, 2, 3

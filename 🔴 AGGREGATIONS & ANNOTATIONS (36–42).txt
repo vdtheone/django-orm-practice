@@ -1,0 +1,30 @@
+🔴 AGGREGATIONS & ANNOTATIONS (36–42)
+
+36. Get total number of books.
+--> Book.objects.count()
+
+37. Get average price of all books.
+    from django.db.models import Avg, Max, Min
+--> Book.objects.aggregate(avg_price = Avg("price"))
+
+38. Get maximum book price.
+❌ Incorrect--> Book.objects.aggregate(price=MAX(price))
+✅ Correct Answer--> Book.objects.aggregate(max_price = Max("price"))
+
+39. Get minimum book price.
+❌ Incorrect--> Book.objects.aggregate(price=MIN(price))
+✅ Correct Answer-->Book.objects.aggregate(min_price=Min("price"))
+
+40. Get sum of prices of all books.
+❌Incorrect--> Book.objects.aggregate(total = SUM(price))
+✅Correct Answer--> Book.objects.aggregate(total_price=Sum("price"))
+
+41. Get average book price per author.
+❌ Incorrect--> Author.objects.aggregate(avg_price=AVG(book_set.price))
+✅Correct Answer--> Author.objects.annotate(avg_price = Avg("book__price"))
+
+
+42. Get authors ordered by number of books (descending).
+❌ Incorrect--> Author.objects.aggregate(book_count=Count(book_set.price)).order_by("-book_count")
+✅Correct Answer--> Author.objects.annotate(book_count=Count("book")).order_by("-book_count")
+

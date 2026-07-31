@@ -1,0 +1,47 @@
+🔴 LEVEL 3 — Aggregations & Annotations (21–30)
+
+2️⃣1️⃣ Get total revenue from all completed orders.
+---> Order.objects.filter(status="completed").aggregate(total_revenue=Sum("total_amount"))
+
+2️⃣2️⃣ Get total quantity sold per book.
+❌ Incorrect ---> Book.objects.annotate(total_quantity=Count("orders")).distinct()
+✅ Correct Answer ---> Book.objects.annotate(total_quantity=Count("order_items__quentity))
+
+2️⃣3️⃣ Get average book price per author.
+---> Author.objects.annotate(avg_price=Avg("books__price")).distinct()
+
+2️⃣4️⃣ Get books with total sales value greater than 50,000.
+❌ Incorrect ---> Book.objects.annotate(total_sales=Sum(total_amount)).filter(total_sales__gt=50000)
+✅ Correct Answer ---> Book.objects.annotate(total_sales=Sum(F("order_items__quantity") * F("price"))).filter(total_sales__gt=50000)
+
+2️⃣5️⃣ Get authors ordered by total revenue generated.
+❌ Incorrect ---> Author.objects.annotate(total_revenue=Sum(books_orders__total_amount)).order_by("total_revenue")
+✅ Correct Answer ---> Author.objects.annotate(total_revenue=Sum(F("books__order_items__quentity) * F("books__price))).order_by("-total_revenue")
+
+2️⃣6️⃣ Get users who have placed more than 5 orders.
+---> User.objects.annotate(order_count = Count("orders")).filter(order_count__gt=5)
+
+2️⃣7️⃣ Get top 3 most reviewed books.
+❌ Incorrect ---> Book.objects.order_by("-books__review")[:3]
+✅ Correct Answer ---> Book.objects.annotate(review_count = Count("review")).order_by("-review_count")[:3]
+
+2️⃣8️⃣ Annotate each book with average rating.
+❌ Incorrect ---> Book.objects.annotate(avg_rating=Avg(books__review__rating))
+✅ Correct Answer ---> Book.objects.annotate(avg_rating=Avg("review__rating"))
+
+2️⃣9️⃣ Get books whose rating is higher than overall average rating.
+❌ Incorrect ---> overall_rating = Review.objects.aggregate(avg_rating = Avg(rating))
+✅ Correct Answer ---> overall_rating = Review.objects.aggregate(avg_rating=Avg("rating"))["avg_rating"]
+                                        Book.objects.annotate(avg_rating=Avg("review__rating")).filter(avg_rating__gt=overall_rating)
+
+3️⃣0️⃣ Get monthly order count for the last 6 months.
+---> No Idea
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+from django.utils.timezone import now
+from datetime import timedelta
+✅ Correct Answer ---> Order.objects.filter(created_at__gte=now()-timedelta(days=180)
+                        ).annotate(month=TruncMonth("created_at")
+                        ).value("month").annotate(
+                            order_count=Count("id")
+                        ).order_by("month")

@@ -1,0 +1,81 @@
+🔵 LEVEL 4 — Advanced ORM (31–40)
+
+3️⃣1️⃣ Get authors who have at least one book priced above 2000 (use Exists).
+❌ Incorrect---> Author.objects.filter(books__isnull=False).filter(books__price__gt=2000).exists()
+✅ Correct Answer-->
+                    expensive_books = Book.objects.filter(
+                        author=OuterRef("pk"),
+                        price__gt=2000
+                    )
+                    Author.objects.filter(Exists(expensive_books))
+
+3️⃣2️⃣ Annotate each author with title of their latest book.
+---> latest_book = Book.objects.filter(author=OuterRef("pk")).order_by("-published")
+---> Author.objects.annotate(latest_book_title=Subquery(latest_book.values("title")[:1]))
+
+3️⃣3️⃣ Get latest review per book.
+---> latest_review = Review.objects.filter(book=OuterRef("pk")).order_by("-created_at")
+---> Book.objects.annotate(latest_review_rating=Subquery(latest_review.values("rating")[:1]))
+
+3️⃣4️⃣ Get books published in the same year as their author’s first book.
+❌ Incorrect---> author_first_book_year = Author.objects.filter(book=OuterRef("pk")).order_by("-books__published")
+❌ Incorrect---> Book.objects.filter(published__year__in=Subquery(author_first_book_year.value("book_published")[:1]))
+✅ Correct Answer-->
+                    from django.db.models.functions import ExtractYear
+
+                    first_book_year = Book.objects.filter(author=OuterRef("author")).order_by("published").values("published")[:1]
+                    Book.objects.filter(published_year=ExtractYear(Subquery(first_book_year)))
+
+3️⃣5️⃣ Get users whose last order amount is above 10,000.
+---> last_order_amount = Order.objects.filter(user=OuterRef("pk")).order_by("-created_at")
+---> User.objects.annotate(orders_total_amount=Subquery(last_order_amount.values("total_amount")[:1])).filter(orders_total_amount__gt=10000)
+
+3️⃣6️⃣ Mark books as is_popular if reviews > 100 (use Case).
+❌ Incorrect---> review_above_hun = Review.objects.filter(book=OuterRef("pk")).annotate(review_count=Count("id"))
+❌ Incorrect---> Book.objects.annotate(is_popular=Subquery(review_above_hun.values("review_count)[:1]))
+                    
+                    from django.db.models import Case, When, BooleanField, Count
+
+✅ Correct Answer-->
+                    Book.objects.annotate(
+                        review_count=Count("review")
+                    ).annotate(
+                        is_popular=Case(
+                            When(review_count__gt=100, then=True),
+                            default=False,
+                            output_field=BooleanField()
+                        )
+                    )
+
+3️⃣7️⃣ Deduct stock when an order is placed (atomic + F).
+---> No Idea
+✅ Correct Answer-->
+                    from django.db import transaction
+                    from django.db.models import F
+
+                    with transaction.atomic():
+                        Book.objects.filter(id=book_id).update(
+                            stock=F("stock") - quantity
+                        )
+
+3️⃣8️⃣ Prevent overselling of books (locking required).
+---> No Idea
+✅ Correct Answer-->
+                    from django.db import transaction
+
+                    with transaction.atomic():
+                        book = Book.objects.select_for_update().get(id=book_id)
+
+                        if book.stock < quantity:
+                            raise Exception("Out of stock")
+
+                        book.stock -= quantity
+                        book.save()
+
+
+3️⃣9️⃣ Optimize a DRF API returning books + author + reviews.
+---> Book.objects.select_related("author").prefetch_related("review")
+
+4️⃣0️⃣ Print and analyze SQL for a complex annotated queryset. 
+---> qs = Book.objects.annotate(avg_rating=Avg("review__rating"))
+---> print(qs.query)

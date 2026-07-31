@@ -1,0 +1,48 @@
+🟣 RELATIONSHIPS & JOINS (26–35)
+
+26. Get all books along with their authors (optimized).
+--> Book.objects.select_related("author").all()
+
+27. Get all books written by author name = “Vishnu”.
+--> Book.objects.select_related("author").filter(author__name="Vishnu")
+
+
+28. Get all authors who have written at least one book.
+❌--> Author.objects.prefetch_related("book_set")
+----> prefetch_related() does not filter
+----> You must use annotate + filter
+
+    from django.db.models import Count
+✅--> Author.objects.annotate(book_count=Count('book')).filter(book_count__gt=0)
+✅--> Author.objects.filter(book__isnull=False).distinct()
+
+29. Get all authors who have NOT written any book.
+❌--> No Idea
+✅-(recommended)-> Author.objects.annotate(book_count=Count('book')).filter(book_count=0)
+✅--> Author.objects.filter(book__isnull=True)
+
+30. Get total number of books per author.
+❌ Incorrect--> Book.objects.aggregate("author_count" = author_id.count())
+✅ Correct Answer--> Author.objects.annotate(book_count=Count('book'))
+    📌 Each Author objects gets book_count.
+
+31. Get authors with more than 5 books.
+❌ Incorrect--> Author.objects.aggregate("book_set".count()> 5)
+✅ Correct Answer--> Author.objects.annotate(book_count=Count("book")).filter(book_count__gt=5)
+
+32. Get all books and print author name without N+1 queries.
+--> books = Book.objects.select_related("author")
+    for book in books:
+        print(book.author.name)
+
+33. Get latest book of each author.
+--> latest_book = Book.objects.filter(author=OuterRef('pk')).order_by('-published')
+    Author.objects.annotate(latest_book_title=latest_book.values("title")[:1])
+
+34. Get books where author name starts with “A”.
+❌--> No Idea
+✅ Correct Answer-->Book.objects.filter(author__name__startswith="A")
+
+35. Get all authors along with their books (reverse relation).
+❌--> No Idea
+✅ Correct Answer--> Author.objects.prefetch_related("book_set")

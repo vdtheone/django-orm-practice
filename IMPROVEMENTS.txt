@@ -1,0 +1,240 @@
+1️⃣ QuerySet Fundamentals (Core ORM Mental Model)
+
+Lazy evaluation
+
+When DB hit happens
+
+Chaining QuerySets
+
+QuerySet immutability
+
+Difference between get(), filter(), exclude()
+
+📌 Why: Many of your mistakes came from not visualizing what the QuerySet contains.
+
+2️⃣ ORM Lookups & Filtering Syntax
+
+__gt, __lt, __gte, __lte
+
+__in, __range
+
+__isnull
+
+String lookups (contains, icontains, startswith, endswith)
+
+Date lookups (year, month, date)
+
+📌 Why: Syntax errors + incorrect NULL handling appeared multiple times.
+
+3️⃣ Ordering, Slicing & Pagination
+
+order_by()
+
+Ascending vs descending
+
+Ordering before slicing
+
+first(), last()
+
+.exists() vs .count()
+
+📌 Why: You confused first vs last records and slicing behavior.
+
+4️⃣ CRUD Operations (Correct & Efficient Way)
+
+objects.create() vs save()
+
+Bulk updates with update()
+
+get_or_create()
+
+update_or_create()
+
+ForeignKey assignment (author vs author_id)
+
+Signals impact on CRUD
+
+📌 Why: FK handling and bulk updates were weak.
+
+5️⃣ Relationships & JOINs (Biggest Gap 🚨)
+
+Forward FK traversal (author__name)
+
+Reverse FK (book_set, related_name)
+
+select_related() vs prefetch_related()
+
+Filtering on relationships
+
+Avoiding N+1 queries
+
+📌 Why: This section had the lowest score.
+
+6️⃣ annotate() vs aggregate() (CRITICAL)
+
+Global aggregation vs per-row annotation
+
+When to use each
+
+Return types
+
+Combining annotate() with filter() and order_by()
+
+📌 Why: This was your most repeated conceptual mistake.
+
+🟡 MEDIUM PRIORITY (Strong Intermediate ORM)
+7️⃣ Aggregation Functions
+
+Count
+
+Avg
+
+Sum
+
+Min
+
+Max
+
+Using aggregations on relationships
+
+Group-by behavior in ORM
+
+📌 Why: SQL knowledge exists, ORM mapping was weak.
+
+8️⃣ Reverse Relationship Aggregations
+
+Count("book")
+
+Avg("book__price")
+
+isnull on reverse FK
+
+distinct() with joins
+
+📌 Why: Needed for real-world reports & dashboards.
+
+9️⃣ F() Expressions (DB-Level Logic)
+
+Field-to-field comparison
+
+Atomic updates
+
+Avoiding race conditions
+
+Arithmetic updates
+
+📌 Why: Bulk update logic was incorrect.
+
+1️⃣0️⃣ Performance Optimization
+
+N+1 problem detection
+
+When to use select_related
+
+When to use prefetch_related
+
+Query optimization in DRF serializers
+
+📌 Why: Essential for production readiness.
+
+🔵 ADVANCED ORM (Learn Conceptually, Practice Gradually)
+1️⃣1️⃣ Subquery & OuterRef
+
+Per-group queries (latest/first record)
+
+Correlated subqueries
+
+Annotating from related models
+
+SQL equivalent understanding
+
+📌 Why: Required for senior-level ORM.
+
+1️⃣2️⃣ Exists() vs .exists()
+
+Boolean existence check
+
+Subquery existence filtering
+
+Performance use cases
+
+📌 Why: Common interview trap.
+
+1️⃣3️⃣ Complex Conditional Queries
+
+Q() objects
+
+AND / OR / NOT logic
+
+Dynamic filters
+
+📌 Why: Real APIs depend on dynamic filtering.
+
+1️⃣4️⃣ Expressions & Functions
+
+Case, When
+
+Coalesce
+
+Cast
+
+Concat
+
+Conditional annotations
+
+📌 Why: Needed for complex business logic.
+
+1️⃣5️⃣ Raw SQL & ORM Interoperability
+
+.raw()
+
+extra() (legacy)
+
+When raw SQL is justified
+
+.query inspection
+
+📌 Why: For debugging and optimization.
+
+🟢 OPTIONAL (Interview & Production Polish)
+1️⃣6️⃣ Transactions & Atomicity
+
+transaction.atomic()
+
+Rollbacks
+
+Locking (select_for_update())
+
+1️⃣7️⃣ Indexes & Constraints
+
+db_index=True
+
+unique_together
+
+indexes = []
+
+Impact on ORM queries
+
+1️⃣8️⃣ Django ORM in DRF Context
+
+Serializer N+1 problems
+
+select_related in ViewSets
+
+Pagination & performance
+
+Filtering backends
+
+🎯 HOW YOU SHOULD STUDY (IMPORTANT)
+
+For every topic:
+
+Write SQL
+
+Convert to ORM
+
+Print .query
+
+Optimize with joins
+
+Test performance impact

@@ -1,0 +1,35 @@
+🟡 LEVEL 2 — Relationships & Filtering (11–20)
+
+1️⃣1️⃣ Get all books along with author name without N+1 queries.
+---> Book.objects.select_related("author")
+
+1️⃣2️⃣ Get authors who have written more than 3 books.
+---> Author.objects.annotate(book_count = Count("books")).filter(book_count__gt=3)
+
+1️⃣3️⃣ Get authors who have NOT written any book.
+---> Author.objects.filter(books__isnull=True).distinct()
+
+1️⃣4️⃣ Get books that belong to authors from India.
+---> Book.objects.filter(author__country="India")
+
+1️⃣5️⃣ Get books that have at least one review with rating ≥ 4.
+---> Book.objects.filter(review__rating__gte=4)
+
+1️⃣6️⃣ Get users who have never placed an order.
+---> User.objects.filter(orders__isnull=True).distinct()
+
+1️⃣7️⃣ Get orders that include a book priced above 1000.
+---> Order.objects.filter(books__price__gt=1000).distinct()
+
+1️⃣8️⃣ Get books reviewed by a specific user.
+---> Book.objects.filter(review__user_id=1).distinct()
+
+1️⃣9️⃣ Get authors whose books have an average rating above 4.
+❌ Incorrect--> Author.objects.annotate(avg_rating=Avg(review__rating)).filter(avg_rating__gt=4)
+✅ Correct Answer-->
+    Author.objects.annotate(avg_rating = Avg("books__review__rating")).filter(avg_rating__gt=4)
+
+2️⃣0️⃣ Get books ordered by number of reviews (descending).
+❌ Incorrect--> Book.objects.order_by("-reviews")
+✅ Correct Answer-->
+    Book.objects.annotate(review_count = Count("review")).order_by("-review_count")
